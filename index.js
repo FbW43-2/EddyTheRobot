@@ -41,10 +41,18 @@ const moveForward = (heading) => {
     }
 }
 
+const printOutPosition = (position) => {
+    console.log(position);
+}
+
+const refuseInstructions = () => {
+    console.log("Eddy does not understand that");
+}
+
 
 // read in the input arguments
 const argumentVector = process.argv;
-console.log("vector", argumentVector)
+//console.log("vector", argumentVector)
 
 // take only the instructions from the programInputArgumentsArray
 const instructions = argumentVector[2] || "";
@@ -60,6 +68,12 @@ for(let i=0; i < instructions.length; i++){
     }
 }
 
-
-console.log(areInstructionsValid);
-console.log("heading is: ", direction, " and posX is: ", posX, " and posY is: ", posY);
+if(areInstructionsValid){
+    let position = {
+        "posX": posX,
+        "posY": posY,
+    }
+    printOutPosition(position);
+} else {
+    refuseInstructions();
+}
