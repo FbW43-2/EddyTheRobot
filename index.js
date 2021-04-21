@@ -1,79 +1,82 @@
-let posX = 0;
-let posY = 0;
-let direction = "NORTH";
 
-const followInstruction = (instruction) => {
-    switch(instruction){
-        case 'R': rotateRight(direction); break;
-        case 'L': rotateLeft(direction); break;
-        case 'G': moveForward(direction); break;
-        default: null; break;
+class Robot {
+    constructor(){
+        this.posX = 0;
+        this.posY = 0;
+        this.direction = 'NORTH';
     }
-}
 
-const rotateRight = (heading) => {
-    switch(heading) {
-        case "NORTH": direction = "EAST"; break;
-        case "EAST": direction = "SOUTH"; break;
-        case "SOUTH": direction = "WEST"; break;
-        case "WEST": direction = "NORTH"; break;
-        default: null; break;
+    followInstruction = (instruction) => {
+        try {
+            switch(instruction){
+                case "L": this.turnLeft(this.direction); break;
+                case "R": this.turnRight(this.direction);; break;
+                case "G": this.moveForward(this.direction); break;
+                default: null; break;
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
-}
 
-const rotateLeft = (heading) => {
-    switch(heading) {
-        case "NORTH": direction = "WEST"; break;
-        case "EAST": direction = "NORTH"; break;
-        case "SOUTH": direction = "EAST"; break;
-        case "WEST": direction = "SOUTH"; break;
-        default: null; break;
+    turnLeft = (direction) => {
+        switch(direction){
+            case "NORTH": this.direction = "WEST"; break;
+            case "EAST": this.direction = "NORTH"; break;
+            case "SOUTH": this.direction = "EAST"; break;
+            case "WEST": this.direction = "SOUTH"; break;
+            default: null;
+        }
     }
-}
 
-const moveForward = (heading) => {
-    switch(heading){
-        case "NORTH": posY++; break;
-        case "EAST": posX++; break;
-        case "SOUTH": posY--; break;
-        case "WEST": posX--; break;
-        default: null; break;
+    turnRight = (direction) => {
+        switch(direction){
+            case "NORTH": this.direction = "EAST"; break;
+            case "EAST": this.direction = "SOUTH"; break;
+            case "SOUTH": this.direction = "WEST"; break;
+            case "WEST": this.direction = "NORTH"; break;
+            default: null;
+        }
     }
-}
 
-const printOutPosition = (position) => {
-    console.log(position);
-}
-
-const refuseInstructions = () => {
-    console.log("Eddy does not understand that");
-}
-
-
-// read in the input arguments
-const argumentVector = process.argv;
-//console.log("vector", argumentVector)
-
-// take only the instructions from the programInputArgumentsArray
-const instructions = argumentVector[2] || "";
-
-let areInstructionsValid = true;
-
-
-for(let i=0; i < instructions.length; i++){
-    if((instructions[i] !== 'R') && (instructions[i] !== 'L') && (instructions[i] !== 'G')){
-        areInstructionsValid = false;
-    } else {
-        followInstruction(instructions[i]);
+    moveForward = (direction) => {
+        switch(direction){
+            case "NORTH": this.posY++; break;
+            case "EAST": this.posX++; break;
+            case "SOUTH": this.posY--; break;
+            case "WEST": this.posX--; break;
+            default: null;
+        }
     }
+
+    printOutPosition = () => {
+        let position = {
+            posX: this.posX,
+            posY: this.posY,
+        }
+        console.log(position);
+    }
+
+    refuseInstructions = () => {
+        console.log("Eddy does not understand that");
+    } 
 }
 
-if(areInstructionsValid){
-    let position = {
-        "posX": posX,
-        "posY": posY,
+// load instructions from the command input argument
+const instructions = process.argv[2] || "";
+// regex to allow only the letters 'G', 'L, and 'R'
+const regex = /^[GLR]*$/;
+
+// instanciate Eddy as an object of the class Robot
+let Eddy = new Robot();
+
+if(instructions.match(regex)){
+    //instructions are valid
+    for(let i=0; i<instructions.length; i++){
+        Eddy.followInstruction(instructions[i]);
     }
-    printOutPosition(position);
+    Eddy.printOutPosition();
 } else {
-    refuseInstructions();
+    // instructions are not valid
+   Eddy.refuseInstructions();
 }
